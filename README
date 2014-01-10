@@ -1,0 +1,57 @@
+"Reflection" is a language's ability to inspect and dynamically call classes, methods, attributes, etc. at runtime.
+For example, all objects in Java has the method getClass,
+which lets you determine its class even if you don't know it at compile time
+(like if you declared it as Object) - this might seem trivial.
+
+More advanced uses lets you list and call methods, constructors, etc.
+
+
+The name reflection is used to describe code which is able to inspect other code in the same system (or itself).
+
+For example, say you have an object of an unknown type in Java,
+and you would like to call a 'doSomething' method on it if one exists.
+Java's static typing system isn't really designed to support this unless the object conforms to a known interface,
+but using reflection, your code can look at the object and find out if it has a method called 'doSomething',
+and then, call it if you want to.
+
+
+So, to give you a code example of this in Java (imagine the object in question is foo) :
+
+Method method = foo.getClass().getMethod("doSomething", null);
+method.invoke(foo, null);
+
+The null indicates there are no parameters being passed to the foo method.
+
+One very common use case in Java is the usage with annotations.
+JUnit 4, for example, will use reflection to look through your classes for methods tagged with the
+@Test annotation, and will then call them when running the unit test.
+
+
+
+Drawbacks of Reflection
+---------------------------
+Reflection is powerful, but should not be used indiscriminately.
+If it is possible to perform an operation without using reflection, then it is preferable to avoid using it.
+The following concerns should be kept in mind when accessing code via reflection.
+
+Performance Overhead
+-------------------
+Because reflection involves types that are dynamically resolved, certain Java virtual machine optimizations
+can not be performed. Consequently, reflective operations have slower performance than
+their non-reflective counterparts,
+and should be avoided in sections of code which are called frequently in performance-sensitive applications.
+
+Security Restrictions
+--------------------
+Reflection requires a runtime permission which may not be present when running under a security manager.
+This is in an important consideration for code which has to run in a restricted security context,
+such as in an Applet.
+
+Exposure of Internals
+--------------------
+Since reflection allows code to perform operations that would be illegal in non-reflective code,
+such as accessing private fields and methods, the use of reflection can result in unexpected side-effects,
+which may render code dysfunctional and may destroy portability.
+Reflective code breaks abstractions and therefore may change behavior with upgrades of the platform.
+
+
